@@ -26,13 +26,8 @@ router.get('/:id', async (req, res) => {
   console.log("test")
   try {
     const productData = await Product.findByPk(req.params.id, {
-      include: [{ model: Category }, {model: Tag}], as: 'product_tags'
+      include: [{ model: Category }, {model: Tag}],
     });
-
-    if (!productData) {
-      res.status(404).json({ message: 'No products found with that id!' });
-      return;
-    }
 
     res.status(200).json(productData);
   } catch (err) {
@@ -41,7 +36,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -49,7 +44,11 @@ router.post('/', (req, res) => {
       stock: 3,
       tagIds: [1, 2, 3, 4]
     }
+    this is extremely frustrating since there are ZERO examples of the syntax just used here, on ANY of the assignments we worked on over the past week. How are we supposed to know this when there are literally no examples to chose from. we've used async await functions, now ur're throwing .thens
+    into this.
+    
   */
+    
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -71,6 +70,7 @@ router.post('/', (req, res) => {
       res.status(400).json(err);
     });
 });
+//where are we supposed to be finding this information? not found in any past weeks assignment just so everyones aware. 
 
 // update product
 router.put('/:id', (req, res) => {
@@ -113,9 +113,17 @@ router.put('/:id', (req, res) => {
       res.status(400).json(err);
     });
 });
+//same here, how is this supposed to work when I've got no examples to go from. 
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const proData = await Product.destroy({where:{id:req.params.id}});
+    res.status(200).json(proData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+
 });
 
 module.exports = router;
