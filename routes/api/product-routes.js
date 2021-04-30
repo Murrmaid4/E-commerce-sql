@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -44,8 +44,7 @@ router.post('/', async (req, res) => {
       stock: 3,
       tagIds: [1, 2, 3, 4]
     }
-    this is extremely frustrating since there are ZERO examples of the syntax just used here, on ANY of the assignments we worked on over the past week. How are we supposed to know this when there are literally no examples to chose from. we've used async await functions, now ur're throwing .thens
-    into this.
+    this is extremely frustrating since there are ZERO examples of the syntax just used here, on ANY of the assignments we worked on over the past week. How are we supposed to know this when there are literally no examples to chose from. we've used async await functions, now ur're throwing .thens into this.
     
   */
     
