@@ -30,7 +30,7 @@ router.get('/:id', async (req, res) => {
     });
 
     if (!productData) {
-      res.status(404).json({ message: 'No reader found with that id!' });
+      res.status(404).json({ message: 'No products found with that id!' });
       return;
     }
 
