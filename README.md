@@ -52,7 +52,7 @@ The tech used on this project include Javascript, Express, Node, MySQL, DBeaver,
  git pull request anytime
 
 ## Images
-later
+![screenshot1](https://user-images.githubusercontent.com/78389456/116765288-66fd7b00-a9f2-11eb-915e-2569c1330a27.jpg)
  
 ## Tests
  use the insomnia app and corresponding app route links to test and add new entries 
