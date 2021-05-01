@@ -36,7 +36,14 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
+  try {
+    const proData = await Product.create(req.body);
+    res.status(200).json(proData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -44,75 +51,86 @@ router.post('/', (req, res) => {
       stock: 3,
       tagIds: [1, 2, 3, 4]
     }
-    this is extremely frustrating since there are ZERO examples of the syntax just used here, on ANY of the assignments we worked on over the past week. How are we supposed to know this when there are literally no examples to chose from. we've used async await functions, now ur're throwing .thens into this.
-    
+
+     this is extremely frustrating since there are ZERO examples of the syntax just used here,  on ANY of the assignments we worked on over the past week. How are we supposed to know how to use this when there are literally no examples to chose from. we've used async await functions, and these functions given do not work whereas the asyncs were giving me no errors 
+     VVVV
   */
+ 
     
-  Product.create(req.body)
-    .then((product) => {
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
-        const productTagIdArr = req.body.tagIds.map((tag_id) => {
-          return {
-            product_id: product.id,
-            tag_id,
-          };
-        });
-        return ProductTag.bulkCreate(productTagIdArr);
-      }
-      // if no product tags, just respond
-      res.status(200).json(product);
-    })
-    .then((productTagIds) => res.status(200).json(productTagIds))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+  // Product.create(req.body)
+  //   .then((product) => {
+  //     // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+  //     if (req.body.tagIds.length) {
+  //       const productTagIdArr = req.body.tagIds.map((tag_id) => {
+  //         return {
+  //           product_id: product.id,
+  //           tag_id,
+  //         };
+  //       });
+  //       return ProductTag.bulkCreate(productTagIdArr);
+  //     }
+  //     // if no product tags, just respond
+  //     res.status(200).json(product);
+  //   })
+  //   .then((productTagIds) => res.status(200).json(productTagIds))
+  //   .catch((err) => {
+  //     console.log(err);
+  //     res.status(400).json(err);
+  //   });
 });
-//where are we supposed to be finding this information? not found in any past weeks assignment just so everyones aware. 
+//where are we supposed to be finding this information? 
 
 // update product
-router.put('/:id', (req, res) => {
+router.put('/:id', async(req, res) => {
+  
+  try {
+    const proData = await Product.update(req.body, {where:{id:req.params.id}});
+    res.status(200).json(proData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+  
+  // same here for this code, it gave me a lot of errors - the async await functions worked perfectly for me 
+  
   // update product data
-  Product.update(req.body, {
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((product) => {
-      // find all associated tags from ProductTag
-      return ProductTag.findAll({ where: { product_id: req.params.id } });
-    })
-    .then((productTags) => {
-      // get list of current tag_ids
-      const productTagIds = productTags.map(({ tag_id }) => tag_id);
-      // create filtered list of new tag_ids
-      const newProductTags = req.body.tagIds
-        .filter((tag_id) => !productTagIds.includes(tag_id))
-        .map((tag_id) => {
-          return {
-            product_id: req.params.id,
-            tag_id,
-          };
-        });
-      // figure out which ones to remove
-      const productTagsToRemove = productTags
-        .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-        .map(({ id }) => id);
+//   Product.update(req.body, {
+//     where: {
+//       id: req.params.id,
+//     },
+//   })
+//     .then((product) => {
+//       // find all associated tags from ProductTag
+//       return ProductTag.findAll({ where: { product_id: req.params.id } });
+//     })
+//     .then((productTags) => {
+//       // get list of current tag_ids
+//       const productTagIds = productTags.map(({ tag_id }) => tag_id);
+//       // create filtered list of new tag_ids
+//       const newProductTags = req.body.tagIds
+//         .filter((tag_id) => !productTagIds.includes(tag_id))
+//         .map((tag_id) => {
+//           return {
+//             product_id: req.params.id,
+//             tag_id,
+//           };
+//         });
+//       // figure out which ones to remove
+//       const productTagsToRemove = productTags
+//         .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
+//         .map(({ id }) => id);
 
-      // run both actions
-      return Promise.all([
-        ProductTag.destroy({ where: { id: productTagsToRemove } }),
-        ProductTag.bulkCreate(newProductTags),
-      ]);
-    })
-    .then((updatedProductTags) => res.json(updatedProductTags))
-    .catch((err) => {
-      // console.log(err);
-      res.status(400).json(err);
-    });
+//       // run both actions
+//       return Promise.all([
+//         ProductTag.destroy({ where: { id: productTagsToRemove } }),
+//         ProductTag.bulkCreate(newProductTags),
+//       ]);
+//     })
+//     .then((updatedProductTags) => res.json(updatedProductTags))
+//     .catch((err) => {
+//       // console.log(err);
+//       res.status(400).json(err);
+//     });
 });
-//same here, how is this supposed to work when I've got no examples to go from. 
 
 router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
