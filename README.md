@@ -7,7 +7,7 @@
 This back end project allows for users to keep track of products, what categories they belong to and to update and delete entries as well
 
 
-Link to Video of Application Functionality: 
+Link to Video of Application Functionality: https://drive.google.com/file/d/1O6aLk9hgfnsIjObgJ9qok8KhHlhkAsvN/view
 
 ## Table of Contents 
 
